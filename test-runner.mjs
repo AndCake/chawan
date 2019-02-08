@@ -13,6 +13,7 @@ const tasks = {
 
 const threadList = [];
 const stack = [];
+let timer = null;
 
 function run(task) {
     return new Promise((resolve, reject) => {
@@ -81,6 +82,51 @@ function notify(message) {
     }
 }
 
+function runStackEntry(tasksCopy, level) {
+    let passed = 0;
+    let rejected = 0;
+
+    return Promise.all(tasksCopy.before.map(run)).
+        then(() => {
+            const list = tasksCopy.list;
+            const runTask = () => {
+                if (list.length <= 0) return Promise.resolve();
+                const runnable = list.shift();
+                let start = Date.now();
+                return Promise.resolve().
+                    then(() => Promise.all(tasksCopy.beforeEach.map(run))).
+                    then(() => run(runnable)).
+                    then(() => Promise.all(tasksCopy.afterEach.map(run))).
+                    then(() => {
+                        passed += 1;
+                        notify({
+                            success: true,
+                            context: tasksCopy.context,
+                            name: runnable.name,
+                            duration: Date.now() - start,
+                        });
+                    }).
+                    catch(err => {
+                        rejected += 1;
+                        notify({
+                            success: false,
+                            context: tasksCopy.context,
+                            name: runnable.name,
+                            error: err.message,
+                            stack: err.stack.toString(),
+                        });
+                    }).then(runTask);
+            }
+            return runTask();
+        }).
+        then(() => Promise.all(tasksCopy.after.map(run))).
+        then(() => ({
+            rejected: level.rejected + rejected,
+            passed: level.passed + passed,
+            describeStart: level.describeStart,
+        }));
+}
+
 export function describe(context = '', callback = () => {}) {
     // register all contained tasks
     let tasksCopy = JSON.parse(JSON.stringify(tasks));
@@ -88,68 +134,28 @@ export function describe(context = '', callback = () => {}) {
     let level = stack.push(tasksCopy);
     callback();
 
-    let passed = 0;
-    let rejected = 0;
-    let describeStart = Date.now();
-
-    Promise.resolve().then(() => {
-        return Promise.all(tasksCopy.before.map(runnable => runnable.fn()));
-    }).then(() => {
-        const list = tasksCopy.list;
-        const runTask = () => {
-            if (list.length <= 0) return Promise.resolve();
-            const runnable = list.shift();
-            let start = Date.now();
-            return Promise.resolve().then(() => {
-                return Promise.all(tasksCopy.beforeEach.map(run));
-            }).then(() => run(runnable)).then(() => {
-                return Promise.all(tasksCopy.afterEach.map(run));
-            }).then(() => {
-                passed += 1;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+        function next(result = {rejected: 0, passed: 0, describeStart: Date.now()}) {
+            if (stack.length > 0) {
+                runStackEntry(stack.shift(), result).then(next);
+            } else {
                 notify({
-                    success: true,
+                    success: result.rejected === 0,
+                    final: true,
                     context: tasksCopy.context,
-                    name: runnable.name,
-                    duration: Date.now() - start,
+                    rejected: result.rejected,
+                    passed: result.passed,
+                    duration: Date.now() - result.describeStart,
                 });
-            }).catch(err => {
-                rejected += 1;
-                notify({
-                    success: false,
-                    context: tasksCopy.context,
-                    name: runnable.name,
-                    error: err.message,
-                    stack: err.stack.toString(),
-                });
-            }).then(runTask);
-        }
-        return runTask();
-    }).then(() => {
-        return Promise.all(tasksCopy.after.map(runnable => runnable.fn()));
-    }).then(function tryAgain() {
-        if (stack.length !== 1 && level === 1) {
-            return setTimeout(tryAgain, 1);
-        }
-        if (stack.length === 1 && level === 1) {
-            rejected += stack[0].rejected;
-            notify({
-                success: rejected === 0,
-                final: true,
-                context: tasksCopy.context,
-                rejected: rejected,
-                passed: passed + stack[0].passed,
-                duration: Date.now() - describeStart,
-            });
 
-            if (rejected > 0) {
-                process.exit(1);
+                if (result.rejected > 0) {
+                    process.exit(1);
+                }
             }
-        } else {
-            stack[0].rejected += rejected;
-            stack[0].passed += passed;
         }
-        stack.splice(stack.indexOf(tasksCopy), 1);
-    });
+        next();
+    }, 1);
 }
 
 describe.skip = () => {};
@@ -158,7 +164,6 @@ export function it(context, callback) {
     if (typeof callback !== 'function') return;
     stack[stack.length - 1].list.push({name: context, fn: callback});
 }
-
 it.skip = () => {};
 
 export function before(callback) {
@@ -285,7 +290,7 @@ export function expect(actual, message) {
                 throw new TypeError(`Unexpected type for ${actual} (${typeof actual})`);
             }
         },
-        toBeNotEmpty() {
+        toNotBeEmpty() {
             const msg = message || `${actual} is empty`;
             if (Array.isArray(actual) || typeof actual === 'string') {
                 assert(actual.length !== 0, msg);
