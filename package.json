@@ -1,14 +1,14 @@
 {
-  "name": "chawan",
-  "version": "1.0.0",
-  "description": "Simple ES module-based testing framework",
-  "module": "test-runner.mjs",
-  "bin": {
-      "chawan": "index.mjs"
-  },
-  "scripts": {
-      "test": "./test-runner.spec.mjs"
-  },
-  "author": "Robert Kunze <quixotic.worx@gmail.com",
-  "license": "MIT"
+    "name": "chawan",
+    "version": "1.0.1",
+    "description": "Simple ES module-based testing framework",
+    "module": "test-runner.mjs",
+    "bin": {
+        "chawan": "index.mjs"
+    },
+    "scripts": {
+        "test": "./test-runner.spec.mjs"
+    },
+    "author": "Robert Kunze <quixotic.worx@gmail.com",
+    "license": "MIT"
 }
