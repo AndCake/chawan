@@ -78,4 +78,17 @@ describe('Test context', () => {
             expect(s).toHaveBeenCalledWith('a', 5);
         });
     });
+
+    describe.skip('skipping describes', () => {
+        it('fails', () => {
+            expect(false).toBeTrue();
+        });
+    });
+    describe('skipping it', () => {
+        it.skip('fails', () => {
+            expect(false).toBeTrue();
+        });
+
+        it('also skips this');
+    });
 });

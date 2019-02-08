@@ -35,6 +35,10 @@ describe('Array', () => {
         it('returns -1 if no such element exists', () => {
             // ...
         });
+
+        it.skip('is not done yet', () => {
+            // ...
+        });
     });
 });
 

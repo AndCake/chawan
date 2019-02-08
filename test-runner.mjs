@@ -152,9 +152,14 @@ export function describe(context = '', callback = () => {}) {
     });
 }
 
+describe.skip = () => {};
+
 export function it(context, callback) {
+    if (typeof callback !== 'function') return;
     stack[stack.length - 1].list.push({name: context, fn: callback});
 }
+
+it.skip = () => {};
 
 export function before(callback) {
     stack[stack.length - 1].before.push({name: 'before', fn: callback});
