@@ -16,7 +16,12 @@ Chawan goals
 BDD API
 =======
 
-Chawan provides a mocha-like API to structure your tests. It also supports promises.
+Chawan provides a mocha-like API to structure your tests. It also supports promises and the typical hooks:
+
+* before
+* beforeEach
+* afterEach
+* after
 
 ```
 import { describe, it } from 'chawan';

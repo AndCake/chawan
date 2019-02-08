@@ -84,7 +84,7 @@ function notify(message) {
 export function describe(context = '', callback = () => {}) {
     // register all contained tasks
     let tasksCopy = JSON.parse(JSON.stringify(tasks));
-    tasksCopy.context = stack.length === 0 ? context : stack[0].context + context;
+    tasksCopy.context = stack.length === 0 ? context : `${stack[0].context} ${context}`;
     let level = stack.push(tasksCopy);
     callback();
 
