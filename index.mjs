@@ -1,3 +1,4 @@
+#!/usr/bin/env -S node --no-warnings --experimental-modules
 import { runAll } from './test-runner';
 
 if (process.argv.length < 3) {

@@ -3,6 +3,7 @@
     "version": "1.0.1",
     "description": "Simple ES module-based testing framework",
     "module": "test-runner.mjs",
+    "main": "test-runner.mjs",
     "bin": {
         "chawan": "index.mjs"
     },
