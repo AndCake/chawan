@@ -23,7 +23,7 @@ Chawan provides a mocha-like API to structure your tests. It also supports promi
 * afterEach
 * after
 
-```
+```js
 import { describe, it } from 'chawan';
 
 describe('Array', () => {
@@ -67,7 +67,7 @@ for spies:
 Spies
 =====
 
-```
+```js
 import {expect, spy} from 'chawan';
 
 // spy on objects
@@ -109,13 +109,13 @@ Running tests
 
 In order to execute a test file, simply run it as you would normally do in nodeJS:
 
-```
+```bash
 $ node --experimental-modules --no-warnings ./tests/my-test.mjs
 ```
 
 Alternatively, you can also have the test file directly executable:
 
-```
+```js
 #!/usr/bin/env -S node --no-warnings --experimental-modules
 
 import { describe, it, expect } from 'chawan';
@@ -127,12 +127,12 @@ describe('my test', () => {
 
 You can then run it like that:
 
-```
+```bash
 $ sh ./tests/my-test.mjs
 ```
 
 If you want to run multiple tests together as one test suite, you can use the chawan binary:
 
-```
+```bash
 $ chawan ./tests/*.mjs
 ```
