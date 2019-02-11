@@ -4,6 +4,15 @@
     "description": "Simple ES module-based testing framework to help you write beautiful code",
     "module": "test-runner.mjs",
     "main": "test-runner.mjs",
+    "keywords": [
+        "bdd",
+        "test",
+        "tdd"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/andcake/chawan.git"
+    },
     "bin": {
         "chawan": "index.mjs"
     },
