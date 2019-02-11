@@ -1,6 +1,6 @@
 {
     "name": "chawan",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Simple ES module-based testing framework to help you write beautiful code",
     "module": "test-runner.mjs",
     "main": "test-runner.mjs",
