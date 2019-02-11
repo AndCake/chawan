@@ -10,6 +10,6 @@
     "scripts": {
         "test": "./test-runner.spec.mjs"
     },
-    "author": "Robert Kunze <quixotic.worx@gmail.com",
+    "author": "Robert Kunze <quixotic.worx@gmail.com>",
     "license": "MIT"
 }
