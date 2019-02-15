@@ -1,8 +1,8 @@
 United ES6 test tools
 
-Mocha is great but having asserts, assert plugins and spies spread out as separate projects is a bit frustrating, especially when you have to jump around all of the different documentations or setup test environment.
+Mocha is great but having asserts, assert plugins and spies spread out as separate projects is a bit frustrating, especially when you have to jump around all of the different documentations to setup test environments.
 
-Additionally, most of these regular CommonJS modules which makes their usage in a pure ES module awkward.
+Additionally, most of these are regular CommonJS modules which makes their usage in a pure ES module awkward.
 
 Chawan goals
 ============
@@ -99,6 +99,7 @@ import {expect, spy} from 'chawan';
     s(obj, 'myFunc').returns(2);
     expect(obj.myFunc('a', 3, 7)).toEqual(2);
     expect(obj.myFunc).toHaveBeenCalledWith('a', 3);
+    expect(obj.myFunc.lastArgs[2]).toEqual(7);
     obj.myFunc.restore();
     expect(obj.myFunc()).toEqual('original');
 }
@@ -107,7 +108,7 @@ import {expect, spy} from 'chawan';
 Running tests
 =============
 
-In order to execute a test file, simply run it as you would normally do in nodeJS:
+In order to execute a test file, simply run it as you would normally do in Node.js:
 
 ```bash
 $ node --experimental-modules --no-warnings ./tests/my-test.mjs

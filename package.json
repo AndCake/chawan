@@ -4,6 +4,9 @@
     "description": "Simple ES module-based testing framework to help you write beautiful code",
     "module": "test-runner.mjs",
     "main": "test-runner.mjs",
+    "engines": {
+        "node": ">=8"
+    },
     "keywords": [
         "bdd",
         "test",
