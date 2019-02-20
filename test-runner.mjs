@@ -194,6 +194,8 @@ export function spy(toSpyOn, spyName) {
     };
     spyFn.returns = (data) => {
         spyFn._returnData = data;
+        spyFn.lastArgs = [];
+        return spyFn;
     };
     spyFn.restore = () => {
         toSpyOn[spyName] = spyFn.originalFn;
