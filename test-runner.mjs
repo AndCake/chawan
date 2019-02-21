@@ -56,6 +56,7 @@ export function runAll(listOfFiles = [], results = { passed: 0, failed: 0 }) {
                     console.log(`\x1b[32m√ ${message.context} (${message.duration}ms)\x1b[0m`);
                 } else {
                     console.error(`\x1b[31mx ${message.context}\x1b[0m`);
+                    process.exit(1);
                 }
             }
         });
@@ -194,6 +195,7 @@ export function spy(toSpyOn, spyName) {
     };
     spyFn.returns = (data) => {
         spyFn._returnData = data;
+        return spyFn;
     };
     spyFn.restore = () => {
         toSpyOn[spyName] = spyFn.originalFn;
